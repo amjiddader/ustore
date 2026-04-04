@@ -1,25 +1,13 @@
 use anyhow::{Result, bail, Context};
 use colored::*;
 
+use crate::config;
+
 const GITHUB_REPO: &str = "amjiddader/ustore";
 const CURRENT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub fn run() -> Result<()> {
-    // Only allow: non-root user running with sudo
-    let euid = {
-        use std::os::unix::fs::MetadataExt;
-        std::fs::metadata("/proc/self").map(|m| m.uid()).unwrap_or(0)
-    };
-    let sudo_user = std::env::var("SUDO_USER").ok()
-        .filter(|s| !s.is_empty() && s != "root");
-
-    if euid != 0 || sudo_user.is_none() {
-        bail!(
-            "{}\n  {}",
-            "This command requires sudo from a non-root user.".red().bold(),
-            "Usage: sudo ustore update".yellow()
-        );
-    }
+    config::require_sudo("ustore update")?;
 
     println!("{} Checking for uStore updates...", "→".cyan().bold());
 

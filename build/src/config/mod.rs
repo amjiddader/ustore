@@ -1,7 +1,48 @@
-use anyhow::{Context, Result};
+use anyhow::{Context, Result, bail};
+use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
+
+/// Read real UID from /proc/self/status (first field of Uid: line).
+/// Real UID is the original user's UID — stays non-zero under sudo, is 0 for root login.
+fn read_real_uid() -> u32 {
+    fs::read_to_string("/proc/self/status")
+        .ok()
+        .and_then(|s| {
+            s.lines()
+                .find(|l| l.starts_with("Uid:"))
+                .and_then(|l| l.split_whitespace().nth(1))
+                .and_then(|v| v.parse::<u32>().ok())
+        })
+        .unwrap_or(0)
+}
+
+/// Require that the process is running via sudo from a non-root user.
+/// Blocks: direct root login, non-sudo normal user.
+/// Allows: normal user running `sudo ustore ...`.
+pub fn require_sudo(usage_hint: &str) -> Result<()> {
+    let real_uid = read_real_uid();
+    if real_uid == 0 {
+        bail!(
+            "{}\n  {}",
+            "Root user cannot use this command.".red().bold(),
+            format!("Login as a normal user and run: sudo {}", usage_hint).yellow()
+        );
+    }
+    let euid = {
+        use std::os::unix::fs::MetadataExt;
+        fs::metadata("/proc/self").map(|m| m.uid()).unwrap_or(1)
+    };
+    if euid != 0 {
+        bail!(
+            "{}\n  {}",
+            "This command requires sudo.".red().bold(),
+            format!("Usage: sudo {}", usage_hint).yellow()
+        );
+    }
+    Ok(())
+}
 
 /// Get the real user's home directory, even when running under sudo.
 fn real_home() -> PathBuf {
