@@ -9,13 +9,19 @@ use crate::registry::search::find_package;
 use crate::store;
 
 pub fn run(id: Option<&str>) -> Result<()> {
-    // Block running as root
-    if std::env::var("USER").unwrap_or_default() == "root"
-        && std::env::var("SUDO_USER").ok().filter(|s| !s.is_empty()).is_none()
-    {
+    // Only allow: sudo ustore ... (UID 0 with SUDO_USER set)
+    let is_root = std::process::Command::new("id")
+        .arg("-u")
+        .output()
+        .map(|o| String::from_utf8_lossy(&o.stdout).trim() == "0")
+        .unwrap_or(false);
+    let has_sudo_user = std::env::var("SUDO_USER").ok().filter(|s| !s.is_empty()).is_some();
+
+    if !is_root || !has_sudo_user {
         bail!(
-            "{}",
-            "Please use ustore as non-root user to install and update apps.".red().bold()
+            "{}\n  {}",
+            "This command requires sudo.".red().bold(),
+            "Usage: sudo ustore upgrade [package]".yellow()
         );
     }
 
