@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=PyCharm
+Comment=Python IDE for Professional Developers
+Exec=/opt/ustore/pycharm/bin/pycharm %f
+Icon=ustore-pycharm
+Categories=Development;IDE;
+Terminal=false
+StartupNotify=true
+StartupWMClass=jetbrains-pycharm

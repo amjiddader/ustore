@@ -8,6 +8,47 @@ fn run_cmd(cmd: &str, args: &[&str]) -> Result<Output> {
     Ok(output)
 }
 
+pub fn install_dependencies(deps: &[String]) -> Result<()> {
+    if deps.is_empty() {
+        return Ok(());
+    }
+
+    println!(
+        "  {} Installing system dependencies...",
+        "→".cyan().bold()
+    );
+
+    // Update package list first
+    let _ = run_cmd("sudo", &["apt-get", "update", "-qq"]);
+
+    // Install with --ignore-missing so unavailable packages are skipped
+    let mut args = vec![
+        "apt-get", "install", "-y", "--ignore-missing",
+    ];
+    let dep_refs: Vec<&str> = deps.iter().map(|s| s.as_str()).collect();
+    args.extend(&dep_refs);
+
+    let output = Command::new("sudo")
+        .args(&args)
+        .stdout(std::process::Stdio::inherit())
+        .stderr(std::process::Stdio::inherit())
+        .status()?;
+
+    if output.success() {
+        println!(
+            "  {} Dependencies installed.",
+            "✓".green().bold()
+        );
+    } else {
+        println!(
+            "  {} Some dependencies may not be available, continuing anyway...",
+            "⚠".yellow().bold()
+        );
+    }
+
+    Ok(())
+}
+
 pub fn install_deb(deb_path: &Path, name: &str, version: &str) -> Result<()> {
     let path_str = deb_path
         .to_str()
@@ -223,14 +264,23 @@ pub fn install_tarball(
         install_dir.to_str().unwrap(),
     ])?;
 
-    // Find and symlink the binary
+    // Find and symlink the binary — check root, then bin/ subfolder
     let binary_path = install_dir.join(binary_name);
-    if binary_path.exists() {
-        run_cmd("sudo", &["chmod", "+x", binary_path.to_str().unwrap()])?;
+    let binary_bin_path = install_dir.join("bin").join(binary_name);
+    let found_binary = if binary_path.exists() {
+        Some(binary_path)
+    } else if binary_bin_path.exists() {
+        Some(binary_bin_path)
+    } else {
+        None
+    };
+
+    if let Some(bin) = found_binary {
+        run_cmd("sudo", &["chmod", "+x", bin.to_str().unwrap()])?;
         let _ = run_cmd("sudo", &["rm", "-f", symlink.to_str().unwrap()]);
         run_cmd("sudo", &[
             "ln", "-s",
-            binary_path.to_str().unwrap(),
+            bin.to_str().unwrap(),
             symlink.to_str().unwrap(),
         ])?;
     }
@@ -252,6 +302,101 @@ pub fn install_tarball(
 
 pub fn remove_tarball(app_id: &str, binary_name: &str) -> Result<()> {
     remove_appimage(app_id, binary_name)
+}
+
+pub fn install_run(
+    run_path: &Path,
+    name: &str,
+    version: &str,
+    install_args: Option<&str>,
+) -> Result<()> {
+    println!();
+    println!("  {}", "┌─────────────────────────────────────────┐".cyan());
+    println!(
+        "  {} {} {} {} {}",
+        "│".cyan(),
+        "📦 Installing".green().bold(),
+        name.white().bold(),
+        format!("v{}", version).yellow(),
+        "│".cyan()
+    );
+    println!("  {}", "└─────────────────────────────────────────┘".cyan());
+    println!();
+
+    let path_str = run_path.to_str().unwrap();
+
+    // Make executable
+    run_cmd("chmod", &["+x", path_str])?;
+
+    if let Some(args) = install_args {
+        // Auto-install with provided args (e.g. "-i" for DaVinci)
+        println!("  {} Running installer with args: {}", "→".cyan().bold(), args);
+
+        let shell_cmd = format!("sudo {} {}", path_str, args);
+        let status = Command::new("bash")
+            .args(["-c", &shell_cmd])
+            .stdout(std::process::Stdio::inherit())
+            .stderr(std::process::Stdio::inherit())
+            .status()?;
+
+        if !status.success() {
+            bail!("Installer exited with error.");
+        }
+    } else {
+        // Interactive mode — ask user to run manually
+        println!("  {}", "┌─────────────────────────────────────────────────┐".yellow());
+        println!("  {}  {} {}", "│".yellow(), "⚠".yellow().bold(), "Installer needs your attention!".yellow().bold());
+        println!("  {}", "│".yellow());
+        println!("  {}  Run this in another terminal:", "│".yellow());
+        println!("  {}  {}", "│".yellow(), format!("sudo {}", path_str).white().bold());
+        println!("  {}", "│".yellow());
+        println!("  {}  Press {} when installation is complete.", "│".yellow(), "ENTER".green().bold());
+        println!("  {}", "└─────────────────────────────────────────────────┘".yellow());
+        println!();
+
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input)?;
+    }
+
+    println!("{}", "Installation complete.".green().bold());
+    Ok(())
+}
+
+pub fn run_post_script(post_script_url: &str) -> Result<()> {
+    if post_script_url.is_empty() {
+        return Ok(());
+    }
+
+    println!("  {} Running post-install script...", "→".cyan().bold());
+
+    let tmp_dir = crate::config::cache_dir().join("post_script_tmp");
+    std::fs::create_dir_all(&tmp_dir).context("Failed to create temp dir")?;
+
+    let script_path = tmp_dir.join("post_install.sh");
+    download_raw(post_script_url, &script_path)?;
+
+    run_cmd("chmod", &["+x", script_path.to_str().unwrap()])?;
+
+    let status = Command::new("sudo")
+        .arg("bash")
+        .arg(script_path.to_str().unwrap())
+        .stdout(std::process::Stdio::inherit())
+        .stderr(std::process::Stdio::inherit())
+        .status()?;
+
+    // Cleanup
+    let _ = std::fs::remove_dir_all(&tmp_dir);
+
+    if status.success() {
+        println!("  {} Post-install script completed.", "✓".green().bold());
+    } else {
+        println!(
+            "  {} Post-install script exited with warnings.",
+            "⚠".yellow().bold()
+        );
+    }
+
+    Ok(())
 }
 
 pub fn install_desktop_entry(app_id: &str, config_base_url: &str) -> Result<()> {

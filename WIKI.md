@@ -33,7 +33,8 @@ install_dir = "/opt/ustore"
 
 | Command | Description |
 |---------|-------------|
-| `ustore update` | Fetch latest package registry |
+| `ustore update` | Self-update uStore to latest version from GitHub |
+| `ustore refresh` | Fetch latest package registry |
 | `ustore search <query>` | Search for apps |
 | `ustore install <package>` | Install an app |
 | `ustore remove <package>` | Remove an app |
@@ -53,7 +54,7 @@ sudo apt install aria2
 uStore needs `sudo` for install/remove (dpkg requires it).
 
 ### `No cached registry found`
-Run `ustore update` first to fetch the registry.
+Run `ustore refresh` first to fetch the registry.
 
 ## Architecture
 
@@ -68,3 +69,26 @@ _Detailed architecture docs coming soon._
 | `~/.cache/ustore/source.json` | Cached registry |
 | `~/.local/share/ustore/ustore.db` | Installed apps database |
 | `/opt/ustore/` | tar.gz app installs |
+
+## Package Types
+
+uStore supports multiple package formats:
+
+| Type | Extension | Install Method |
+|------|-----------|----------------|
+| `deb` | `.deb` | `sudo dpkg -i` with auto dependency fix |
+| `appimage` | `.AppImage` | Copy to `/opt/ustore/`, symlink to `/usr/local/bin/` |
+| `tar.gz` | `.tar.gz` | Extract to `/opt/ustore/`, symlink binary |
+| `tar.xz` | `.tar.xz` | Extract to `/opt/ustore/`, symlink binary |
+| `run` | `.run` | Execute with install_args or prompt user |
+
+## New Fields
+
+### `install_args`
+Arguments passed to `.run` installers for silent/automated install. Example: `"-i"` for DaVinci Resolve.
+
+### `post_script`
+URL to a bash script that runs after installation completes. Useful for firewall rules, system config, etc.
+
+### `dependencies`
+System packages installed via `sudo apt-get install -y --ignore-missing` before the main package download.

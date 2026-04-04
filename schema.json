@@ -89,7 +89,7 @@
                 },
                 "type": {
                   "type": "string",
-                  "enum": ["deb", "tar.gz", "binary", "appimage"],
+                  "enum": ["deb", "tar.gz", "tar.xz", "binary", "appimage", "run"],
                   "description": "Package format type"
                 },
                 "url": { "type": "string", "format": "uri", "description": "Download URL" },
@@ -108,6 +108,8 @@
           "dpkg_name": { "type": "string", "description": "dpkg package name (for .deb packages)" },
           "binary_name": { "type": "string", "description": "Executable binary name" },
           "desktop_entry": { "type": "string", "description": ".desktop file name" },
+          "install_args": { "type": "string", "description": "Arguments to pass to .run installer (e.g. '-i' for silent install)" },
+          "post_script": { "type": "string", "format": "uri", "description": "URL to a post-install bash script to run after installation" },
           "post_install": {
             "type": "array",
             "items": { "type": "string" },

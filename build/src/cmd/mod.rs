@@ -1,6 +1,7 @@
 pub mod install;
 pub mod remove;
 pub mod search;
+pub mod selfupdate;
 pub mod update;
 pub mod upgrade;
 pub mod list;

@@ -47,6 +47,8 @@ Add a new entry inside the `"packages"` array. Use this template:
   "dpkg_name": "app-name",
   "binary_name": "app-name",
   "desktop_entry": "app-name.desktop",
+  "install_args": "",
+  "post_script": "",
   "post_install": [],
   "pre_remove": [],
   "auto_update": false,
@@ -72,6 +74,8 @@ Add a new entry inside the `"packages"` array. Use this template:
 | `variants` | ✅ | At least one variant (see below) |
 | `dpkg_name` | ⬜ | The `dpkg` package name (for `.deb` type) |
 | `binary_name` | ⬜ | The executable name |
+| `install_args` | ⬜ | Arguments for `.run` installer (e.g. `"-i"` for silent) |
+| `post_script` | ⬜ | URL to post-install bash script |
 | `notes` | ⬜ | Additional info |
 
 ### Variant Fields
@@ -80,7 +84,7 @@ Add a new entry inside the `"packages"` array. Use this template:
 |-------|----------|--------|
 | `version` | ✅ | Real version number (NOT `latest`) |
 | `arch` | ✅ | `amd64`, `arm64`, `armhf`, `i386`, `all` |
-| `type` | ✅ | `deb`, `tar.gz`, `binary`, `appimage` |
+| `type` | ✅ | `deb`, `tar.gz`, `tar.xz`, `binary`, `appimage`, `run` |
 | `url` | ✅ | Direct download URL (HTTPS only) |
 | `sha256` | ⬜ | SHA256 checksum (leave `""` if unknown) |
 | `size_mb` | ✅ | Approximate size in MB |
@@ -93,11 +97,19 @@ If your app is a `.tar.gz` and doesn't create a desktop entry, also add:
 - `config/<app-id>.desktop` — Desktop entry file
 - `config/<app-id>.png` — App icon (128x128)
 
-### 5. Update `APPS.md`
+### 5. For `.run` Apps
+
+For `.run` installers (e.g. DaVinci Resolve):
+- Set `"type": "run"` in variants
+- Set `"install_args": "-i"` if the installer supports silent mode
+- Add system dependencies in the `"dependencies"` array
+- Optionally set `"post_script"` to a URL of a bash script to run after install
+
+### 6. Update `APPS.md`
 
 Add your app to the numbered list in `APPS.md`.
 
-### 6. Validate
+### 7. Validate
 
 Make sure `source.json` is valid JSON:
 
@@ -105,7 +117,7 @@ Make sure `source.json` is valid JSON:
 python3 -m json.tool source.json > /dev/null
 ```
 
-### 7. Submit PR
+### 8. Submit PR
 
 ```bash
 git checkout -b add-app-name

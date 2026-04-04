@@ -30,6 +30,14 @@ pub fn run(id: &str) -> Result<()> {
                 .unwrap_or(id);
             installer::remove_tarball(id, binary_name)?;
         }
+        "run" => {
+            // .run apps install system-wide, not in /opt/ustore/
+            // Just remove tracking — user may need to uninstall manually
+            println!(
+                "  {} .run packages may need manual uninstall. Removing uStore tracking.",
+                "⚠".yellow().bold()
+            );
+        }
         _ => {
             let dpkg_name = package
                 .and_then(|p| p.dpkg_name.as_deref())

@@ -49,6 +49,8 @@ pub struct Package {
     pub dpkg_name: Option<String>,
     pub binary_name: Option<String>,
     pub desktop_entry: Option<String>,
+    pub install_args: Option<String>,
+    pub post_script: Option<String>,
     pub post_install: Vec<String>,
     pub pre_remove: Vec<String>,
     pub auto_update: bool,

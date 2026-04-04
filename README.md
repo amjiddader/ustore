@@ -30,6 +30,15 @@ Snap is slow, bloated, and creates disk waste. uStore is the alternative.
 | **Updates** | 🎯 You choose when | 🔄 Forced auto-updates |
 | **Registry** | 📋 Open source JSON | 🔒 Canonical-controlled |
 
+#### Well the real reason 
+
+Well to be honest apps are easy to install open a website copy and paste commands and you can install anything you want\
+But ..... 
+1. SNAP sucks i found vscode used 120GB of cache on my ubuntu it was installed from snap.
+2. Copy paste things are easy but i hate to open 10 website follow instruction get download links.
+3. Now being hones i am lazy dude :lol 
+4. And update apps also sucks for some that are not added in apt ... 
+
 ## 🚀 Install
 
 One command:
@@ -50,22 +59,22 @@ sudo apt-get install -f -y
 
 ```bash
 # Fetch the latest app registry
+ustore refresh
+
+# Self-update uStore to latest version
 ustore update
 
 # Search for apps
 ustore search browser
-ustore search discord
 
 # Install an app
-ustore install google-chrome
-ustore install discord
 ustore install brave-browser
 
 # See what's installed
 ustore list
 
 # Get detailed info
-ustore info google-chrome
+ustore info brave-browser
 
 # Upgrade all apps
 ustore upgrade
@@ -82,11 +91,9 @@ ustore categories
 
 ## 📦 Available Apps
 
-| App | Category | Type |
-|-----|----------|------|
-| Google Chrome | 🌐 Browsers | .deb |
-| Brave Browser | 🌐 Browsers | .deb |
-| Discord | 💬 Communication | .deb |
+Currently i have added apps i need often \
+But you can add new apps PR welcome
+Currenlty app list [APPS.md](APPS.md)
 
 > More apps coming soon! [Add your favorite app →](CONTRIBUTE.md)
 
@@ -97,7 +104,7 @@ ustore categories
 │  GitHub Repo (source.json)               │
 │  Curated registry of apps + URLs         │
 └──────────────┬───────────────────────────┘
-               │ ustore update
+               │ ustore refresh
                ▼
 ┌──────────────────────────────────────────┐
 │  Local Cache (~/.cache/ustore/)          │
@@ -119,11 +126,7 @@ ustore categories
 
 ## 🔄 Auto Version Updates
 
-A GitHub Action runs every 12 hours to:
-1. Download each `.deb` package
-2. Extract the real version via `dpkg-deb`
-3. Update `source.json` with current versions
-4. Push changes automatically
+Will try to maintain this and add new apps if needed.
 
 This means `ustore list` always knows when upgrades are available.
 
@@ -141,6 +144,6 @@ MIT — do whatever you want with it.
 
 <div align="center">
 
-**Built with 🦀 Rust • Downloads with aria2c • No Snap Required**
+**Built with 🦀 Rust • Downloads & Install • No Snap Required**
 
 </div>

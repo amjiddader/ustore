@@ -16,8 +16,10 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Fetch latest package registry from GitHub
+    /// Self-update uStore to the latest version from GitHub
     Update,
+    /// Fetch latest package registry from GitHub
+    Refresh,
     /// Search for packages by name or keyword
     Search { query: String },
     /// Install a package
@@ -41,7 +43,8 @@ fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Some(Commands::Update) => cmd::update::run()?,
+        Some(Commands::Update) => cmd::selfupdate::run()?,
+        Some(Commands::Refresh) => cmd::update::run()?,
         Some(Commands::Search { query }) => cmd::search::run(&query)?,
         Some(Commands::Install { package }) => cmd::install::run(&package)?,
         Some(Commands::Remove { package }) => cmd::remove::run(&package)?,
