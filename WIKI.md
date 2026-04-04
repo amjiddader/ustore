@@ -42,6 +42,7 @@ install_dir = "/opt/ustore"
 | `ustore info <package>` | Show detailed app info |
 | `ustore upgrade [package]` | Upgrade one or all apps |
 | `ustore categories` | List app categories |
+| `ustore clear` | Delete cached download files |
 
 ## Troubleshooting
 
@@ -67,6 +68,7 @@ _Detailed architecture docs coming soon._
 | `/usr/bin/ustore` | CLI binary |
 | `~/.config/ustore/config.toml` | User config |
 | `~/.cache/ustore/source.json` | Cached registry |
+| `~/.cache/ustore/downloads/` | Cached download files |
 | `~/.local/share/ustore/ustore.db` | Installed apps database |
 | `/opt/ustore/` | tar.gz app installs |
 
@@ -92,3 +94,9 @@ URL to a bash script that runs after installation completes. Useful for firewall
 
 ### `dependencies`
 System packages installed via `sudo apt-get install -y --ignore-missing` before the main package download.
+
+### `file_name`
+Explicit download filename used for caching. This is the name the file is saved as in `~/.cache/ustore/downloads/`. If the file already exists, the download is skipped.
+
+### `alt_names`
+Alternative names and aliases for fuzzy search (e.g. `["chrome", "gc"]` for Google Chrome).

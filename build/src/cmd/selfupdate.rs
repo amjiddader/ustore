@@ -5,6 +5,16 @@ const GITHUB_REPO: &str = "amjiddader/ustore";
 const CURRENT_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub fn run() -> Result<()> {
+    // Block running as root
+    if std::env::var("USER").unwrap_or_default() == "root"
+        && std::env::var("SUDO_USER").ok().filter(|s| !s.is_empty()).is_none()
+    {
+        bail!(
+            "{}",
+            "Please use ustore as non-root user to install and update apps.".red().bold()
+        );
+    }
+
     println!("{} Checking for uStore updates...", "→".cyan().bold());
 
     // Fetch latest release from GitHub API

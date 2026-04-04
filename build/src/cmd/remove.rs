@@ -8,6 +8,16 @@ use crate::installer;
 use crate::store;
 
 pub fn run(id: &str) -> Result<()> {
+    // Block running as root
+    if std::env::var("USER").unwrap_or_default() == "root"
+        && std::env::var("SUDO_USER").ok().filter(|s| !s.is_empty()).is_none()
+    {
+        bail!(
+            "{}",
+            "Please use ustore as non-root user to install and update apps.".red().bold()
+        );
+    }
+
     if !store::is_tracked(id)? {
         bail!("Package '{}' is not installed via ustore.", id);
     }

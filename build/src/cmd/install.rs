@@ -9,6 +9,16 @@ use crate::installer;
 use crate::store;
 
 pub fn run(id: &str, force: bool) -> Result<()> {
+    // Block running as root
+    if std::env::var("USER").unwrap_or_default() == "root"
+        && std::env::var("SUDO_USER").ok().filter(|s| !s.is_empty()).is_none()
+    {
+        bail!(
+            "{}",
+            "Please use ustore as non-root user to install and update apps.".red().bold()
+        );
+    }
+
     let cfg = config::load_config()?;
 
     let registry = fetch::get_registry(&cfg)?;
@@ -57,26 +67,38 @@ pub fn run(id: &str, force: bool) -> Result<()> {
     // Install system dependencies if any
     installer::install_dependencies(&package.dependencies)?;
 
-    println!(
-        "{} {} v{} ({})...",
-        "→".cyan().bold(),
-        "Downloading".bold(),
-        variant.version,
-        variant.arch
-    );
+    let filename = &package.file_name;
+
+    println!("  {} Checking for cached download...", "→".cyan().bold());
+    let cache_path = crate::config::cache_dir().join("downloads").join(filename);
 
     let ext = match variant.pkg_type.as_str() {
         "appimage" => "AppImage",
         "tar.gz" => "tar.gz",
         "tar.xz" => "tar.xz",
         "run" => {
-            // Detect actual download extension from URL
             if variant.url.ends_with(".zip") { "zip" } else { "run" }
         }
         _ => "deb",
     };
-    let filename = format!("{}_{}.{}", id, variant.version, ext);
-    let mut file_path = downloader::download_to_cache(&variant.url, &filename)?;
+
+    let mut file_path = if cache_path.exists() {
+        println!(
+            "  {} {} already downloaded, skipping.",
+            "✓".green().bold(),
+            filename.bold()
+        );
+        cache_path
+    } else {
+        println!(
+            "  {} {} v{} ({})...",
+            "→".cyan().bold(),
+            "Downloading".bold(),
+            variant.version,
+            variant.arch
+        );
+        downloader::download_to_cache(&variant.url, filename)?
+    };
 
     // If .run package was downloaded as .zip, extract the .run file
     if variant.pkg_type == "run" && ext == "zip" {

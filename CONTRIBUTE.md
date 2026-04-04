@@ -28,6 +28,7 @@ Add a new entry inside the `"packages"` array. Use this template:
   "publisher": "Publisher Name",
   "license": "mit | gpl-3.0 | proprietary",
   "tags": ["keyword1", "keyword2", "keyword3"],
+  "alt_names": ["alias1", "shortname"],
   "verified": false,
   "added_date": "YYYY-MM-DD",
   "updated_date": "YYYY-MM-DD",
@@ -46,6 +47,7 @@ Add a new entry inside the `"packages"` array. Use this template:
   "dependencies": [],
   "dpkg_name": "app-name",
   "binary_name": "app-name",
+  "file_name": "app-name_1.0.0_amd64.deb",
   "desktop_entry": "app-name.desktop",
   "install_args": "",
   "post_script": "",
@@ -74,6 +76,8 @@ Add a new entry inside the `"packages"` array. Use this template:
 | `variants` | ✅ | At least one variant (see below) |
 | `dpkg_name` | ⬜ | The `dpkg` package name (for `.deb` type) |
 | `binary_name` | ⬜ | The executable name |
+| `file_name` | ✅ | Download filename for caching (e.g. `app-name_1.0.0_amd64.deb`) |
+| `alt_names` | ⬜ | Search aliases (e.g. `["chrome", "gc"]`) |
 | `install_args` | ⬜ | Arguments for `.run` installer (e.g. `"-i"` for silent) |
 | `post_script` | ⬜ | URL to post-install bash script |
 | `notes` | ⬜ | Additional info |

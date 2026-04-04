@@ -49,6 +49,7 @@ pub struct Package {
     pub dependencies: Vec<String>,
     pub dpkg_name: Option<String>,
     pub binary_name: Option<String>,
+    pub file_name: String,
     pub desktop_entry: Option<String>,
     pub install_args: Option<String>,
     pub post_script: Option<String>,

@@ -9,6 +9,16 @@ use crate::registry::search::find_package;
 use crate::store;
 
 pub fn run(id: Option<&str>) -> Result<()> {
+    // Block running as root
+    if std::env::var("USER").unwrap_or_default() == "root"
+        && std::env::var("SUDO_USER").ok().filter(|s| !s.is_empty()).is_none()
+    {
+        bail!(
+            "{}",
+            "Please use ustore as non-root user to install and update apps.".red().bold()
+        );
+    }
+
     let cfg = config::load_config()?;
 
     let registry = fetch::get_registry(&cfg)?;

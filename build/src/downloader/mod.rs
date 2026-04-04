@@ -26,7 +26,7 @@ pub fn download_file(url: &str, dest: &Path) -> Result<PathBuf> {
             "--follow-torrent=false",
             "--allow-overwrite=true",
             "--auto-file-renaming=false",
-            "--console-log-level=warn",
+            "--console-log-level=error",
             "--summary-interval=0",
             "--download-result=hide",
             "--human-readable=true",

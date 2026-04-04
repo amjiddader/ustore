@@ -3,6 +3,17 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 
+/// Get the real user's home directory, even when running under sudo.
+fn real_home() -> PathBuf {
+    // If running under sudo, use SUDO_USER's home instead of /root/
+    if let Ok(sudo_user) = std::env::var("SUDO_USER") {
+        if sudo_user != "root" {
+            return PathBuf::from(format!("/home/{}", sudo_user));
+        }
+    }
+    dirs::home_dir().expect("could not determine home directory")
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Config {
     pub registry_url: String,
@@ -25,24 +36,21 @@ impl Default for Config {
 }
 
 pub fn config_dir() -> PathBuf {
-    let dir = dirs::config_dir()
-        .expect("could not determine config directory")
-        .join("ustore");
+    let dir = real_home().join(".config").join("ustore");
     fs::create_dir_all(&dir).expect("failed to create config directory");
     dir
 }
 
 pub fn cache_dir() -> PathBuf {
-    let dir = dirs::cache_dir()
-        .expect("could not determine cache directory")
-        .join("ustore");
+    let dir = real_home().join(".cache").join("ustore");
     fs::create_dir_all(&dir).expect("failed to create cache directory");
     dir
 }
 
 pub fn db_path() -> PathBuf {
-    let path = dirs::data_local_dir()
-        .expect("could not determine data directory")
+    let path = real_home()
+        .join(".local")
+        .join("share")
         .join("ustore")
         .join("ustore.db");
     if let Some(parent) = path.parent() {

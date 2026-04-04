@@ -50,7 +50,7 @@
           "id", "name", "description", "category", "icon", "website",
           "publisher", "license", "tags", "verified", "added_date",
           "updated_date", "popularity", "variants", "dependencies",
-          "post_install", "pre_remove", "auto_update"
+          "file_name", "post_install", "pre_remove", "auto_update"
         ],
         "properties": {
           "id": {
@@ -112,6 +112,7 @@
           },
           "dpkg_name": { "type": "string", "description": "dpkg package name (for .deb packages)" },
           "binary_name": { "type": "string", "description": "Executable binary name" },
+          "file_name": { "type": "string", "description": "Download filename used for caching (e.g. google-chrome-stable_current_amd64.deb)" },
           "desktop_entry": { "type": "string", "description": ".desktop file name" },
           "install_args": { "type": "string", "description": "Arguments to pass to .run installer (e.g. '-i' for silent install)" },
           "post_script": { "type": "string", "format": "uri", "description": "URL to a post-install bash script to run after installation" },

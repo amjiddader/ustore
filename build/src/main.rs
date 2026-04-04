@@ -42,6 +42,8 @@ enum Commands {
         /// Package to upgrade (upgrades all if omitted)
         package: Option<String>,
     },
+    /// Clear cached download files
+    Clear,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -57,6 +59,7 @@ fn main() -> anyhow::Result<()> {
         Some(Commands::Info { package }) => cmd::info::run(&package)?,
         Some(Commands::Categories) => cmd::categories::run()?,
         Some(Commands::Upgrade { package }) => cmd::upgrade::run(package.as_deref())?,
+        Some(Commands::Clear) => cmd::clear::run()?,
         None => {
             println!("🏪 uStore — A modern app store for Ubuntu.");
             println!("Run `ustore --help` for usage information.");
