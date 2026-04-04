@@ -219,6 +219,23 @@ pub fn run(id: &str, force: bool) -> Result<()> {
                 }
             }
 
+            // Run post-install commands if any
+            if !package.post_install.is_empty() {
+                println!("  {} Running post-install commands...", "→".cyan().bold());
+                for cmd_str in &package.post_install {
+                    let status = std::process::Command::new("bash")
+                        .args(["-c", cmd_str])
+                        .stdout(std::process::Stdio::inherit())
+                        .stderr(std::process::Stdio::inherit())
+                        .status();
+                    if let Ok(s) = status {
+                        if !s.success() {
+                            println!("  {} Command failed: {}", "⚠".yellow().bold(), cmd_str);
+                        }
+                    }
+                }
+            }
+
             println!("{} Cleaning up {}...", "→".cyan().bold(), filename.bold());
             downloader::cleanup_file(&file_path);
 

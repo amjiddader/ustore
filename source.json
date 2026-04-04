@@ -503,10 +503,10 @@
       "desktop_entry": "telegram-desktop.desktop",
       "install_args": "",
       "post_script": "",
-      "post_install": [],
-      "pre_remove": [],
+      "post_install": ["rm -f /home/$SUDO_USER/.local/share/applications/org.telegram.desktop.*"],
+      "pre_remove": ["rm -f /home/$SUDO_USER/.local/share/applications/org.telegram.desktop.*"],
       "auto_update": false,
-      "notes": "Tarball install — extracted to /opt/ustore/telegram-desktop/ with symlink. URL to be provided."
+      "notes": "Tarball install — extracted to /opt/ustore/telegram-desktop/ with symlink."
     }
   ]
 }
