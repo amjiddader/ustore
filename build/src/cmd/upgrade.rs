@@ -15,7 +15,9 @@ pub fn run(id: Option<&str>) -> Result<()> {
         .output()
         .map(|o| String::from_utf8_lossy(&o.stdout).trim() == "0")
         .unwrap_or(false);
-    let has_sudo_user = std::env::var("SUDO_USER").ok().filter(|s| !s.is_empty()).is_some();
+    let has_sudo_user = std::env::var("SUDO_USER").ok()
+        .filter(|s| !s.is_empty() && s != "root")
+        .is_some();
 
     if !is_root || !has_sudo_user {
         bail!(
