@@ -25,7 +25,8 @@ pub fn run(query: &str) -> Result<()> {
     );
 
     println!(
-        "  {:<25} {:<15} {:<10} {:<10} {}",
+        "  {:<20} {:<25} {:<15} {:<10} {:<10} {}",
+        "ID".bold().underline(),
         "Name".bold().underline(),
         "Category".bold().underline(),
         "Type".bold().underline(),
@@ -53,10 +54,13 @@ pub fn run(query: &str) -> Result<()> {
         };
 
         println!(
-            "  {:<25} {:<15} {:<10} {:<10} {}",
-            pkg.name, pkg.category, pkg_type, size, verified
+            "  {:<20} {:<25} {:<15} {:<10} {:<10} {}",
+            pkg.id.cyan(), pkg.name, pkg.category, pkg_type, size, verified
         );
     }
+
+    println!();
+    println!("  {} Use {} to install.", "💡".dimmed(), "ustore install <ID>".green().bold());
 
     Ok(())
 }

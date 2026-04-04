@@ -11,6 +11,9 @@ pub fn search_packages<'a>(registry: &'a SourceRegistry, query: &str) -> Vec<&'a
                 || pkg.description.to_lowercase().contains(&query)
                 || pkg.category.to_lowercase().contains(&query)
                 || pkg.tags.iter().any(|t| t.to_lowercase().contains(&query))
+                || pkg.alt_names.as_ref().is_some_and(|alts| {
+                    alts.iter().any(|a| a.to_lowercase().contains(&query))
+                })
         })
         .collect()
 }

@@ -25,7 +25,8 @@ pub fn run() -> Result<()> {
     );
 
     println!(
-        "  {:<25} {:<20} {:<20} {:<10}",
+        "  {:<20} {:<25} {:<20} {:<20} {:<10}",
+        "ID".bold().underline(),
         "Name".bold().underline(),
         "Installed".bold().underline(),
         "Available".bold().underline(),
@@ -49,8 +50,8 @@ pub fn run() -> Result<()> {
         };
 
         println!(
-            "  {:<25} {:<20} {:<20} {}",
-            pkg.name, pkg.version, available, status
+            "  {:<20} {:<25} {:<20} {:<20} {}",
+            pkg.id.cyan(), pkg.name, pkg.version, available, status
         );
     }
 

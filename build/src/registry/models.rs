@@ -40,6 +40,7 @@ pub struct Package {
     pub publisher: String,
     pub license: String,
     pub tags: Vec<String>,
+    pub alt_names: Option<Vec<String>>,
     pub verified: bool,
     pub added_date: String,
     pub updated_date: String,
