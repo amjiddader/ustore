@@ -1371,7 +1371,7 @@ dependencies = [
 
 [[package]]
 name = "ustore"
-version = "2.0.8"
+version = "2.0.9"
 dependencies = [
  "anyhow",
  "clap",

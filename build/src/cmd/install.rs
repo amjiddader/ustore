@@ -235,8 +235,8 @@ pub fn run(id: &str, force: bool) -> Result<()> {
                 }
             }
 
-            println!("{} Cleaning up downloads...", "→".cyan().bold());
-            let _ = downloader::cleanup_cache();
+            println!("{} Cleaning up {}...", "→".cyan().bold(), filename.bold());
+            downloader::cleanup_file(&file_path);
 
             println!(
                 "{} {} v{} installed successfully!",

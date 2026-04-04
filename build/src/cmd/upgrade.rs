@@ -119,7 +119,7 @@ pub fn run(id: Option<&str>) -> Result<()> {
             registry_pkg.binary_name.as_deref(),
         )?;
 
-        let _ = downloader::cleanup_cache();
+        downloader::cleanup_file(&deb_path);
 
         println!(
             "{} {} upgraded to v{}.",

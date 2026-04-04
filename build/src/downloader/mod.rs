@@ -58,10 +58,8 @@ pub fn download_to_cache(url: &str, filename: &str) -> Result<PathBuf> {
     download_file(url, &cache)
 }
 
-pub fn cleanup_cache() -> Result<()> {
-    let downloads_dir = crate::config::cache_dir().join("downloads");
-    if downloads_dir.exists() {
-        fs::remove_dir_all(&downloads_dir).context("Failed to clean downloads cache")?;
-    }
-    Ok(())
+pub fn cleanup_file(path: &std::path::Path) {
+    let _ = fs::remove_file(path);
+    let aria2 = std::path::PathBuf::from(format!("{}.aria2", path.display()));
+    let _ = fs::remove_file(aria2);
 }
