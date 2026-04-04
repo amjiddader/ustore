@@ -6,7 +6,7 @@
     "maintainer": "amjiddader",
     "url": "https://github.com/amjiddader/ustore",
     "license": "MIT",
-    "last_updated": "2026-04-05",
+    "last_updated": "2026-04-04",
     "total_packages": 9
   },
   "categories": [
@@ -69,8 +69,17 @@
       "website": "https://www.google.com/chrome/",
       "publisher": "Google LLC",
       "license": "proprietary",
-      "tags": ["browser", "web", "google", "chromium"],
-      "alt_names": ["chrome", "gc", "googlechrome"],
+      "tags": [
+        "browser",
+        "web",
+        "google",
+        "chromium"
+      ],
+      "alt_names": [
+        "chrome",
+        "gc",
+        "googlechrome"
+      ],
       "verified": true,
       "added_date": "2026-04-05",
       "updated_date": "2026-04-05",
@@ -107,8 +116,16 @@
       "website": "https://brave.com",
       "publisher": "Brave Software Inc.",
       "license": "mpl-2.0",
-      "tags": ["browser", "privacy", "ad-blocker", "chromium", "crypto"],
-      "alt_names": ["brave"],
+      "tags": [
+        "browser",
+        "privacy",
+        "ad-blocker",
+        "chromium",
+        "crypto"
+      ],
+      "alt_names": [
+        "brave"
+      ],
       "verified": true,
       "added_date": "2026-04-05",
       "updated_date": "2026-04-05",
@@ -145,8 +162,20 @@
       "website": "https://discord.com",
       "publisher": "Discord Inc.",
       "license": "proprietary",
-      "tags": ["chat", "voice", "video", "gaming", "community", "messaging"],
-      "alt_names": ["dc","discordapp","discord-desktop","discord"],
+      "tags": [
+        "chat",
+        "voice",
+        "video",
+        "gaming",
+        "community",
+        "messaging"
+      ],
+      "alt_names": [
+        "dc",
+        "discordapp",
+        "discord-desktop",
+        "discord"
+      ],
       "verified": true,
       "added_date": "2026-04-05",
       "updated_date": "2026-04-05",
@@ -183,8 +212,18 @@
       "website": "https://www.gimp.org",
       "publisher": "The GIMP Team",
       "license": "gpl-3.0",
-      "tags": ["image-editor", "photo", "graphics", "design", "photoshop", "open-source"],
-      "alt_names": ["gimp", "image-editor"],
+      "tags": [
+        "image-editor",
+        "photo",
+        "graphics",
+        "design",
+        "photoshop",
+        "open-source"
+      ],
+      "alt_names": [
+        "gimp",
+        "image-editor"
+      ],
       "verified": true,
       "added_date": "2026-04-05",
       "updated_date": "2026-04-05",
@@ -219,15 +258,26 @@
       "website": "https://code.visualstudio.com",
       "publisher": "Microsoft",
       "license": "proprietary",
-      "tags": ["editor", "ide", "code", "vscode", "microsoft", "development"],
-      "alt_names": ["vscode", "vs-code", "visual-studio-code"],
+      "tags": [
+        "editor",
+        "ide",
+        "code",
+        "vscode",
+        "microsoft",
+        "development"
+      ],
+      "alt_names": [
+        "vscode",
+        "vs-code",
+        "visual-studio-code"
+      ],
       "verified": true,
       "added_date": "2026-04-05",
       "updated_date": "2026-04-05",
       "popularity": 5,
       "variants": [
         {
-          "version": "1.114.0",
+          "version": "1.114.0-1775036290",
           "arch": "amd64",
           "type": "deb",
           "url": "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64",
@@ -257,8 +307,17 @@
       "website": "https://www.jetbrains.com/pycharm/",
       "publisher": "JetBrains s.r.o.",
       "license": "proprietary",
-      "tags": ["ide", "python", "jetbrains", "development", "coding"],
-      "alt_names": ["pycharm-ide", "pycharm"],
+      "tags": [
+        "ide",
+        "python",
+        "jetbrains",
+        "development",
+        "coding"
+      ],
+      "alt_names": [
+        "pycharm-ide",
+        "pycharm"
+      ],
       "verified": true,
       "added_date": "2026-04-05",
       "updated_date": "2026-04-05",
@@ -294,8 +353,21 @@
       "website": "https://www.blackmagicdesign.com/products/davinciresolve",
       "publisher": "Blackmagic Design",
       "license": "proprietary",
-      "tags": ["video-editor", "color-grading", "vfx", "audio", "filmmaking", "post-production"],
-      "alt_names": ["davinci", "resolve", "divinchi", "devanchi", "dvr"],
+      "tags": [
+        "video-editor",
+        "color-grading",
+        "vfx",
+        "audio",
+        "filmmaking",
+        "post-production"
+      ],
+      "alt_names": [
+        "davinci",
+        "resolve",
+        "divinchi",
+        "devanchi",
+        "dvr"
+      ],
       "verified": true,
       "added_date": "2026-04-05",
       "updated_date": "2026-04-05",
@@ -312,11 +384,23 @@
         }
       ],
       "dependencies": [
-        "libapr1", "libaprutil1", "libglu1-mesa", "libxcb-composite0",
-        "libxcb-cursor0", "libxcb-damage0", "libxcb-icccm4", "libxcb-image0",
-        "libxcb-keysyms1", "libxcb-render-util0", "libxcb-util1",
-        "libxcb-xinerama0", "libxcb-xinput0", "libxcb-xkb1",
-        "libxkbcommon-x11-0", "libfuse2t64", "libxtst6"
+        "libapr1",
+        "libaprutil1",
+        "libglu1-mesa",
+        "libxcb-composite0",
+        "libxcb-cursor0",
+        "libxcb-damage0",
+        "libxcb-icccm4",
+        "libxcb-image0",
+        "libxcb-keysyms1",
+        "libxcb-render-util0",
+        "libxcb-util1",
+        "libxcb-xinerama0",
+        "libxcb-xinput0",
+        "libxcb-xkb1",
+        "libxkbcommon-x11-0",
+        "libfuse2t64",
+        "libxtst6"
       ],
       "binary_name": "resolve",
       "file_name": "DaVinci_Resolve_Studio_20.3.2_Linux.run",
@@ -326,7 +410,8 @@
       "post_install": [],
       "pre_remove": [],
       "auto_update": false,
-      "notes": ".run installer — direct .run download, installs with -i -y -a flags (silent, no confirm, allow root). Requires many system dependencies."    },
+      "notes": ".run installer — direct .run download, installs with -i -y -a flags (silent, no confirm, allow root). Requires many system dependencies."
+    },
     {
       "id": "android-studio",
       "name": "Android Studio",
@@ -336,8 +421,19 @@
       "website": "https://developer.android.com/studio",
       "publisher": "Google LLC",
       "license": "proprietary",
-      "tags": ["ide", "android", "kotlin", "java", "mobile", "development", "google"],
-      "alt_names": ["as", "androidstudio"],
+      "tags": [
+        "ide",
+        "android",
+        "kotlin",
+        "java",
+        "mobile",
+        "development",
+        "google"
+      ],
+      "alt_names": [
+        "as",
+        "androidstudio"
+      ],
       "verified": true,
       "added_date": "2026-04-05",
       "updated_date": "2026-04-05",
@@ -373,8 +469,18 @@
       "website": "https://telegram.org",
       "publisher": "Telegram FZ-LLC",
       "license": "gpl-3.0",
-      "tags": ["chat", "messaging", "privacy", "cloud", "groups", "channels"],
-      "alt_names": ["tg", "telegram-desktop"],
+      "tags": [
+        "chat",
+        "messaging",
+        "privacy",
+        "cloud",
+        "groups",
+        "channels"
+      ],
+      "alt_names": [
+        "tg",
+        "telegram-desktop"
+      ],
       "verified": true,
       "added_date": "2026-04-05",
       "updated_date": "2026-04-05",
@@ -400,6 +506,7 @@
       "post_install": [],
       "pre_remove": [],
       "auto_update": false,
-      "notes": "Tarball install — extracted to /opt/ustore/telegram-desktop/ with symlink. URL to be provided."    }
+      "notes": "Tarball install — extracted to /opt/ustore/telegram-desktop/ with symlink. URL to be provided."
+    }
   ]
 }
