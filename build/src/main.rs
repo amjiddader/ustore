@@ -23,7 +23,12 @@ enum Commands {
     /// Search for packages by name or keyword
     Search { query: String },
     /// Install a package
-    Install { package: String },
+    Install {
+        package: String,
+        /// Force reinstall even if already installed
+        #[arg(long)]
+        force: bool,
+    },
     /// Remove an installed package
     Remove { package: String },
     /// List all installed packages
@@ -46,7 +51,7 @@ fn main() -> anyhow::Result<()> {
         Some(Commands::Update) => cmd::selfupdate::run()?,
         Some(Commands::Refresh) => cmd::update::run()?,
         Some(Commands::Search { query }) => cmd::search::run(&query)?,
-        Some(Commands::Install { package }) => cmd::install::run(&package)?,
+        Some(Commands::Install { package, force }) => cmd::install::run(&package, force)?,
         Some(Commands::Remove { package }) => cmd::remove::run(&package)?,
         Some(Commands::List) => cmd::list::run()?,
         Some(Commands::Info { package }) => cmd::info::run(&package)?,

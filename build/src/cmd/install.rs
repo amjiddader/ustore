@@ -8,7 +8,7 @@ use crate::downloader;
 use crate::installer;
 use crate::store;
 
-pub fn run(id: &str) -> Result<()> {
+pub fn run(id: &str, force: bool) -> Result<()> {
     let cfg = config::load_config()?;
 
     let registry = fetch::get_registry(&cfg)?;
@@ -45,9 +45,13 @@ pub fn run(id: &str) -> Result<()> {
         _ => store::is_tracked(id)? && installer::is_installed(dpkg_name),
     };
 
-    if already_installed {
-        println!("{} {} is already installed.", "✓".green().bold(), package.name.bold());
+    if already_installed && !force {
+        println!("{} {} is already installed. Use {} to reinstall.", "✓".green().bold(), package.name.bold(), "--force".yellow());
         return Ok(());
+    }
+
+    if already_installed && force {
+        println!("{} Force reinstalling {}...", "→".cyan().bold(), package.name.bold());
     }
 
     // Install system dependencies if any

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Telegram Desktop
+Comment=Fast and secure messaging app
+Exec=/opt/ustore/telegram/Telegram %u
+Icon=ustore-telegram
+Categories=Network;Chat;InstantMessaging;
+Terminal=false
+StartupNotify=true
+StartupWMClass=TelegramDesktop
+MimeType=x-scheme-handler/tg;
