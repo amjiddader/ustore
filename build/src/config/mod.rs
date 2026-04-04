@@ -4,17 +4,14 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
 
-/// Read real UID from /proc/self/status (first field of Uid: line).
-/// Real UID is the original user's UID — stays non-zero under sudo, is 0 for root login.
-fn read_real_uid() -> u32 {
-    fs::read_to_string("/proc/self/status")
+/// Read the login UID — the UID of the user who originally logged in.
+/// Set by the kernel audit subsystem; cannot be changed after login.
+/// Returns 0 for root login, the user's UID for normal users (even under sudo).
+/// Returns 4294967295 if audit is not configured (treated as unknown).
+fn read_login_uid() -> u32 {
+    fs::read_to_string("/proc/self/loginuid")
         .ok()
-        .and_then(|s| {
-            s.lines()
-                .find(|l| l.starts_with("Uid:"))
-                .and_then(|l| l.split_whitespace().nth(1))
-                .and_then(|v| v.parse::<u32>().ok())
-        })
+        .and_then(|s| s.trim().parse::<u32>().ok())
         .unwrap_or(0)
 }
 
@@ -22,18 +19,32 @@ fn read_real_uid() -> u32 {
 /// Blocks: direct root login, non-sudo normal user.
 /// Allows: normal user running `sudo ustore ...`.
 pub fn require_sudo(usage_hint: &str) -> Result<()> {
-    let real_uid = read_real_uid();
-    if real_uid == 0 {
+    // Check effective UID (are we running as root?)
+    let euid = {
+        use std::os::unix::fs::MetadataExt;
+        fs::metadata("/proc/self").map(|m| m.uid()).unwrap_or(1)
+    };
+
+    // Check login UID (who originally logged in?)
+    let login_uid = read_login_uid();
+    // 4294967295 = unset (audit not configured), fall back to SUDO_UID
+    let original_is_root = if login_uid == 4294967295 {
+        // Fallback: check SUDO_UID (set by sudo to the invoking user's UID)
+        std::env::var("SUDO_UID").ok()
+            .and_then(|s| s.parse::<u32>().ok())
+            .map(|uid| uid == 0)
+            .unwrap_or(true) // no SUDO_UID = not via sudo = treat as root context
+    } else {
+        login_uid == 0
+    };
+
+    if original_is_root {
         bail!(
             "{}\n  {}",
             "Root user cannot use this command.".red().bold(),
             format!("Login as a normal user and run: sudo {}", usage_hint).yellow()
         );
     }
-    let euid = {
-        use std::os::unix::fs::MetadataExt;
-        fs::metadata("/proc/self").map(|m| m.uid()).unwrap_or(1)
-    };
     if euid != 0 {
         bail!(
             "{}\n  {}",
