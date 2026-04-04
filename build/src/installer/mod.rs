@@ -400,6 +400,9 @@ pub fn run_post_script(post_script_url: &str) -> Result<()> {
 }
 
 pub fn install_desktop_entry(app_id: &str, config_base_url: &str) -> Result<()> {
+    // Remove any existing desktop entry first to prevent duplicates
+    let _ = remove_desktop_entry(app_id);
+
     let desktop_url = format!("{}/{}.desktop", config_base_url, app_id);
     let icon_url = format!("{}/{}.png", config_base_url, app_id);
 
