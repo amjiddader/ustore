@@ -19,11 +19,7 @@ pub fn run(id: &str) -> Result<()> {
     };
 
     let dpkg_name = package.dpkg_name.as_deref().unwrap_or(id);
-
-    if store::is_tracked(id)? && installer::is_installed(dpkg_name) {
-        println!("{} {} is already installed.", "✓".green().bold(), package.name.bold());
-        return Ok(());
-    }
+    let binary_name = package.binary_name.as_deref().unwrap_or(id);
 
     let arch = std::process::Command::new("dpkg")
         .arg("--print-architecture")
@@ -42,6 +38,17 @@ pub fn run(id: &str) -> Result<()> {
         None => bail!("No compatible variant found for package '{}'.", id),
     };
 
+    // Check if already installed (deb via dpkg, appimage/tarball via /opt/ustore/)
+    let already_installed = match variant.pkg_type.as_str() {
+        "appimage" | "tar.gz" | "tar.xz" => store::is_tracked(id)? && installer::is_appimage_installed(id),
+        _ => store::is_tracked(id)? && installer::is_installed(dpkg_name),
+    };
+
+    if already_installed {
+        println!("{} {} is already installed.", "✓".green().bold(), package.name.bold());
+        return Ok(());
+    }
+
     println!(
         "{} {} v{} ({})...",
         "→".cyan().bold(),
@@ -50,14 +57,32 @@ pub fn run(id: &str) -> Result<()> {
         variant.arch
     );
 
-    let filename = format!("{}_{}.deb", id, variant.version);
-    let deb_path = downloader::download_to_cache(&variant.url, &filename)?;
+    let ext = match variant.pkg_type.as_str() {
+        "appimage" => "AppImage",
+        "tar.gz" => "tar.gz",
+        "tar.xz" => "tar.xz",
+        _ => "deb",
+    };
+    let filename = format!("{}_{}.{}", id, variant.version, ext);
+    let file_path = downloader::download_to_cache(&variant.url, &filename)?;
 
     println!("{}  {}...", "→".cyan().bold(), "Installing".bold());
-    installer::install_deb(&deb_path, &package.name, &variant.version)?;
 
-    let real_version = installer::get_installed_version(dpkg_name)?
-        .unwrap_or_else(|| variant.version.clone());
+    let real_version = match variant.pkg_type.as_str() {
+        "appimage" => {
+            installer::install_appimage(&file_path, id, binary_name, &package.name, &variant.version)?;
+            variant.version.clone()
+        }
+        "tar.gz" | "tar.xz" => {
+            installer::install_tarball(&file_path, id, binary_name, &package.name, &variant.version)?;
+            variant.version.clone()
+        }
+        _ => {
+            installer::install_deb(&file_path, &package.name, &variant.version)?;
+            installer::get_installed_version(dpkg_name)?
+                .unwrap_or_else(|| variant.version.clone())
+        }
+    };
 
     store::record_install(
         id,

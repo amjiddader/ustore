@@ -6,7 +6,8 @@
 2. Brave Browser - deb 
 3. Discord - deb
 4. Android Studio - tar.gz
-5. Gimp
-7. VLC player
+5. Gimp - appimage
+7. VLC player - deb 
 8. Telegram - deb
-9. Mozilla - deb
+9. Mozilla - tar.gz
+

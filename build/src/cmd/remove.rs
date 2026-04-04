@@ -15,12 +15,29 @@ pub fn run(id: &str) -> Result<()> {
     let cfg = config::load_config()?;
     let registry = fetch::get_registry(&cfg)?;
 
-    let dpkg_name = find_package(&registry, id)
-        .and_then(|p| p.dpkg_name.as_deref())
-        .unwrap_or(id);
+    let package = find_package(&registry, id);
+    let pkg_type = package
+        .and_then(|p| p.variants.first())
+        .map(|v| v.pkg_type.as_str())
+        .unwrap_or("deb");
 
     println!("{} {} {}...", "→".cyan().bold(), "Removing".bold(), id);
-    installer::remove_deb(dpkg_name)?;
+
+    match pkg_type {
+        "appimage" | "tar.gz" | "tar.xz" => {
+            let binary_name = package
+                .and_then(|p| p.binary_name.as_deref())
+                .unwrap_or(id);
+            installer::remove_tarball(id, binary_name)?;
+        }
+        _ => {
+            let dpkg_name = package
+                .and_then(|p| p.dpkg_name.as_deref())
+                .unwrap_or(id);
+            installer::remove_deb(dpkg_name)?;
+        }
+    }
+
     store::record_remove(id)?;
 
     println!(

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Android Studio
+Comment=Android IDE for development
+Exec=/opt/ustore/android-studio/bin/studio.sh %f
+Icon=ustore-android-studio
+Categories=Development;IDE;
+Terminal=false
+StartupWMClass=jetbrains-studio
+MimeType=application/x-java-archive;
+StartupNotify=true

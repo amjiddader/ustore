@@ -7,7 +7,7 @@
     "url": "https://github.com/amjiddader/ustore",
     "license": "MIT",
     "last_updated": "2026-04-05",
-    "total_packages": 3
+    "total_packages": 5
   },
   "categories": [
     {
@@ -161,6 +161,71 @@
       "pre_remove": [],
       "auto_update": false,
       "notes": "Discord auto-updates itself after initial installation."
+    },
+    {
+      "id": "gimp",
+      "name": "GIMP",
+      "description": "Free and open-source image editor for photo retouching, composition, and authoring. Powerful alternative to Photoshop.",
+      "category": "media",
+      "icon": "https://www.gimp.org/images/frontpage/wilber-big.png",
+      "website": "https://www.gimp.org",
+      "publisher": "The GIMP Team",
+      "license": "gpl-3.0",
+      "tags": ["image-editor", "photo", "graphics", "design", "photoshop", "open-source"],
+      "verified": true,
+      "added_date": "2026-04-05",
+      "updated_date": "2026-04-05",
+      "popularity": 5,
+      "variants": [
+        {
+          "version": "3.2.0-RC1",
+          "arch": "amd64",
+          "type": "appimage",
+          "url": "https://download.gimp.org/gimp/v3.2/linux/GIMP-3.2.0-RC1-x86_64.AppImage",
+          "sha256": "",
+          "size_mb": 150,
+          "min_ubuntu": "20.04"
+        }
+      ],
+      "dependencies": [],
+      "binary_name": "gimp",
+      "post_install": [],
+      "pre_remove": [],
+      "auto_update": false,
+      "notes": "AppImage — no installation needed, runs directly. uStore places it in /opt/ustore/gimp/ and symlinks to /usr/local/bin/gimp."
+    },
+    {
+      "id": "firefox",
+      "name": "Mozilla Firefox",
+      "description": "Free and open-source web browser by Mozilla. Privacy-first, highly customizable with thousands of extensions.",
+      "category": "browsers",
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg",
+      "website": "https://www.mozilla.org/firefox/",
+      "publisher": "Mozilla Foundation",
+      "license": "mpl-2.0",
+      "tags": ["browser", "web", "privacy", "mozilla", "open-source"],
+      "verified": true,
+      "added_date": "2026-04-05",
+      "updated_date": "2026-04-05",
+      "popularity": 5,
+      "variants": [
+        {
+          "version": "149.0",
+          "arch": "amd64",
+          "type": "tar.xz",
+          "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/149.0/linux-x86_64/en-US/firefox-149.0.tar.xz",
+          "sha256": "",
+          "size_mb": 85,
+          "min_ubuntu": "20.04"
+        }
+      ],
+      "dependencies": [],
+      "binary_name": "firefox",
+      "desktop_entry": "firefox.desktop",
+      "post_install": [],
+      "pre_remove": [],
+      "auto_update": false,
+      "notes": "Tarball install — extracted to /opt/ustore/firefox/ with symlink in /usr/local/bin/firefox."
     }
   ]
 }
