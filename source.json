@@ -1,0 +1,166 @@
+{
+  "$schema": "https://raw.githubusercontent.com/amjiddader/ustore/main/schema.json",
+  "schema_version": "1.0.0",
+  "repository": {
+    "name": "uStore",
+    "maintainer": "uStore Team",
+    "url": "https://github.com/amjiddader/ustore",
+    "license": "MIT",
+    "last_updated": "2026-04-05",
+    "total_packages": 3
+  },
+  "categories": [
+    {
+      "id": "browsers",
+      "name": "Web Browsers",
+      "icon": "globe",
+      "description": "Web browsers and internet tools"
+    },
+    {
+      "id": "development",
+      "name": "Development",
+      "icon": "code",
+      "description": "IDEs, editors, and developer tools"
+    },
+    {
+      "id": "media",
+      "name": "Media & Graphics",
+      "icon": "image",
+      "description": "Image editors, video players, and media tools"
+    },
+    {
+      "id": "utilities",
+      "name": "Utilities",
+      "icon": "wrench",
+      "description": "System utilities and productivity tools"
+    },
+    {
+      "id": "communication",
+      "name": "Communication",
+      "icon": "message",
+      "description": "Chat, email, and video conferencing"
+    },
+    {
+      "id": "gaming",
+      "name": "Gaming",
+      "icon": "gamepad",
+      "description": "Games, launchers, and gaming utilities"
+    },
+    {
+      "id": "security",
+      "name": "Security",
+      "icon": "shield",
+      "description": "VPNs, password managers, and security tools"
+    },
+    {
+      "id": "office",
+      "name": "Office & Productivity",
+      "icon": "file-text",
+      "description": "Documents, spreadsheets, and productivity"
+    }
+  ],
+  "packages": [
+    {
+      "id": "google-chrome",
+      "name": "Google Chrome",
+      "description": "Fast, secure web browser built by Google with V8 engine, sync across devices, and extensive extension ecosystem.",
+      "category": "browsers",
+      "icon": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg",
+      "website": "https://www.google.com/chrome/",
+      "publisher": "Google LLC",
+      "license": "proprietary",
+      "tags": ["browser", "web", "google", "chromium"],
+      "verified": true,
+      "added_date": "2026-04-05",
+      "updated_date": "2026-04-05",
+      "popularity": 5,
+      "variants": [
+        {
+          "version": "146.0.7680.177-1",
+          "arch": "amd64",
+          "type": "deb",
+          "url": "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb",
+          "sha256": "",
+          "size_mb": 95,
+          "min_ubuntu": "20.04"
+        }
+      ],
+      "dependencies": [],
+      "dpkg_name": "google-chrome-stable",
+      "binary_name": "google-chrome",
+      "desktop_entry": "google-chrome.desktop",
+      "post_install": [],
+      "pre_remove": [],
+      "auto_update": false,
+      "notes": "Google provides its own apt repository after install. uStore handles initial installation."
+    },
+    {
+      "id": "brave-browser",
+      "name": "Brave Browser",
+      "description": "Privacy-focused browser with built-in ad blocker, tracker blocking, and optional crypto rewards. Chromium-based.",
+      "category": "browsers",
+      "icon": "https://brave.com/static-assets/images/brave-logo-sans-text.svg",
+      "website": "https://brave.com",
+      "publisher": "Brave Software Inc.",
+      "license": "mpl-2.0",
+      "tags": ["browser", "privacy", "ad-blocker", "chromium", "crypto"],
+      "verified": true,
+      "added_date": "2026-04-05",
+      "updated_date": "2026-04-05",
+      "popularity": 4,
+      "variants": [
+        {
+          "version": "latest",
+          "arch": "amd64",
+          "type": "deb",
+          "url": "https://github.com/amjiddader/ustore-packages/releases/download/brave-latest/brave-browser_amd64.deb",
+          "sha256": "",
+          "size_mb": 120,
+          "min_ubuntu": "20.04"
+        }
+      ],
+      "dependencies": [],
+      "dpkg_name": "brave-browser",
+      "binary_name": "brave-browser",
+      "desktop_entry": "brave-browser.desktop",
+      "post_install": [],
+      "pre_remove": [],
+      "auto_update": false,
+      "notes": "Brave provides its own apt repository after install."
+    },
+    {
+      "id": "discord",
+      "name": "Discord",
+      "description": "Voice, video, and text chat app for communities and friends. Popular for gaming, dev teams, and social groups.",
+      "category": "communication",
+      "icon": "https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a69f118df70ad7828d4_icon_clyde_blurple_RGB.svg",
+      "website": "https://discord.com",
+      "publisher": "Discord Inc.",
+      "license": "proprietary",
+      "tags": ["chat", "voice", "video", "gaming", "community", "messaging"],
+      "verified": true,
+      "added_date": "2026-04-05",
+      "updated_date": "2026-04-05",
+      "popularity": 5,
+      "variants": [
+        {
+          "version": "0.0.131",
+          "arch": "amd64",
+          "type": "deb",
+          "url": "https://discord.com/api/download?platform=linux&format=deb",
+          "sha256": "",
+          "size_mb": 90,
+          "min_ubuntu": "20.04"
+        }
+      ],
+      "dependencies": [],
+      "dpkg_name": "discord",
+      "binary_name": "discord",
+      "desktop_entry": "discord.desktop",
+      "post_install": [],
+      "pre_remove": [],
+      "auto_update": false,
+      "notes": "Discord auto-updates itself after initial installation."
+    }
+  ]
+}

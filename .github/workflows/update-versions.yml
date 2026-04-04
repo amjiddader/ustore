@@ -1,0 +1,108 @@
+name: Update Package Versions
+
+on:
+  schedule:
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y aria2 jq
+
+      - name: Update deb package versions
+        run: |
+          set -euo pipefail
+
+          TMPDIR=$(mktemp -d)
+          trap 'rm -rf "$TMPDIR"' EXIT
+
+          SOURCE_FILE="source.json"
+          PACKAGE_COUNT=$(jq '.packages | length' "$SOURCE_FILE")
+
+          for i in $(seq 0 $((PACKAGE_COUNT - 1))); do
+            PACKAGE_ID=$(jq -r ".packages[$i].id" "$SOURCE_FILE")
+            VARIANT_COUNT=$(jq ".packages[$i].variants | length" "$SOURCE_FILE")
+
+            for j in $(seq 0 $((VARIANT_COUNT - 1))); do
+              VARIANT_TYPE=$(jq -r ".packages[$i].variants[$j].type" "$SOURCE_FILE")
+
+              if [ "$VARIANT_TYPE" != "deb" ]; then
+                continue
+              fi
+
+              URL=$(jq -r ".packages[$i].variants[$j].url" "$SOURCE_FILE")
+              DEB_FILE="$TMPDIR/${PACKAGE_ID}_${j}.deb"
+
+              echo "::group::Processing $PACKAGE_ID (variant $j)"
+              echo "Downloading: $URL"
+
+              if ! aria2c \
+                --max-connection-per-server=16 \
+                --follow-torrent=false \
+                --allow-overwrite=true \
+                --auto-file-renaming=false \
+                --dir="$TMPDIR" \
+                --out="${PACKAGE_ID}_${j}.deb" \
+                "$URL"; then
+                echo "::warning::Failed to download $PACKAGE_ID variant $j, skipping"
+                echo "::endgroup::"
+                continue
+              fi
+
+              if [ ! -f "$DEB_FILE" ]; then
+                echo "::warning::Downloaded file not found for $PACKAGE_ID variant $j, skipping"
+                echo "::endgroup::"
+                continue
+              fi
+
+              VERSION=$(dpkg-deb -f "$DEB_FILE" Version 2>/dev/null || true)
+
+              if [ -z "$VERSION" ]; then
+                echo "::warning::Could not extract version from $PACKAGE_ID variant $j, skipping"
+                rm -f "$DEB_FILE"
+                echo "::endgroup::"
+                continue
+              fi
+
+              echo "Extracted version: $VERSION"
+
+              jq --arg ver "$VERSION" \
+                ".packages[$i].variants[$j].version = \$ver" \
+                "$SOURCE_FILE" > "$SOURCE_FILE.tmp" \
+                && mv "$SOURCE_FILE.tmp" "$SOURCE_FILE"
+
+              rm -f "$DEB_FILE"
+              echo "::endgroup::"
+            done
+          done
+
+      - name: Update last_updated field
+        run: |
+          jq --arg date "$(date +%Y-%m-%d)" \
+            '.repository.last_updated = $date' \
+            source.json > source.json.tmp \
+            && mv source.json.tmp source.json
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if ! git diff --quiet source.json; then
+            git add source.json
+            git commit -m "chore: update package versions - $(date +%Y-%m-%d)"
+            git push
+          else
+            echo "No version changes detected, skipping commit."
+          fi

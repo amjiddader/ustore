@@ -1,0 +1,37 @@
+[package]
+name = "ustore"
+version = "1.0.0"
+edition = "2024"
+description = "A modern app store for Ubuntu — install apps without Snap"
+authors = ["amjiddader"]
+license = "MIT"
+repository = "https://github.com/amjiddader/ustore"
+
+[dependencies]
+clap = { version = "4.6", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls"] }
+anyhow = "1.0"
+colored = "3.0"
+dirs = "6.0"
+toml = "1.0"
+rusqlite = { version = "0.32", features = ["bundled"] }
+sha2 = "0.10"
+hex = "0.4"
+
+[profile.release]
+opt-level = "z"
+lto = true
+strip = true
+codegen-units = 1
+
+[package.metadata.deb]
+maintainer = "amjiddader <amjiddader@github.com>"
+depends = "aria2, libc6"
+section = "utils"
+priority = "optional"
+assets = [
+    ["target/release/ustore", "usr/bin/", "755"],
+]
+extended-description = "uStore is a modern app store for Ubuntu that replaces Snap. Install apps directly from curated sources — no bloat, no sandboxing overhead, no disk waste."
