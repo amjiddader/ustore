@@ -1,6 +1,6 @@
 [package]
 name = "ustore"
-version = "2.0.6"
+version = "2.0.7"
 edition = "2024"
 description = "A modern app store for Ubuntu — install apps without Snap"
 authors = ["amjiddader"]

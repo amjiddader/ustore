@@ -89,12 +89,63 @@ pub fn run(id: &str, force: bool) -> Result<()> {
     };
 
     let mut file_path = if cache_path.exists() {
-        println!(
-            "  {} {} already downloaded, skipping.",
-            "✓".green().bold(),
-            filename.bold()
-        );
-        cache_path
+        let aria2_path = std::path::PathBuf::from(format!("{}.aria2", cache_path.display()));
+        if aria2_path.exists() {
+            // Partial download detected
+            println!(
+                "  {} Partial download detected for {}",
+                "⚠".yellow().bold(),
+                filename.bold()
+            );
+            println!();
+            println!("  What would you like to do?");
+            println!("    {} Continue download", "[Y]".green().bold());
+            println!("    {} Re-download from scratch", "[D]".yellow().bold());
+            println!("    {} Try to install as-is", "[T]".red().bold());
+            print!("  > ");
+            std::io::Write::flush(&mut std::io::stdout())?;
+
+            let mut input = String::new();
+            std::io::stdin().read_line(&mut input)?;
+            let choice = input.trim().to_lowercase();
+
+            match choice.as_str() {
+                "d" => {
+                    let _ = std::fs::remove_file(&cache_path);
+                    let _ = std::fs::remove_file(&aria2_path);
+                    println!(
+                        "  {} Re-downloading {} v{} ({})...",
+                        "→".cyan().bold(),
+                        "Downloading".bold(),
+                        variant.version,
+                        variant.arch
+                    );
+                    downloader::download_to_cache(&variant.url, filename)?
+                }
+                "t" => {
+                    println!(
+                        "  {} Attempting install with partial file...",
+                        "⚠".yellow().bold()
+                    );
+                    cache_path
+                }
+                _ => {
+                    // Default: continue download (aria2c resumes automatically)
+                    println!(
+                        "  {} Resuming download...",
+                        "→".cyan().bold()
+                    );
+                    downloader::download_to_cache(&variant.url, filename)?
+                }
+            }
+        } else {
+            println!(
+                "  {} {} already downloaded, skipping.",
+                "✓".green().bold(),
+                filename.bold()
+            );
+            cache_path
+        }
     } else {
         println!(
             "  {} {} v{} ({})...",

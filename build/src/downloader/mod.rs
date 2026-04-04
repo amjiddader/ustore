@@ -24,6 +24,7 @@ pub fn download_file(url: &str, dest: &Path) -> Result<PathBuf> {
             "--max-concurrent-downloads=1",
             "--file-allocation=none",
             "--follow-torrent=false",
+            "--continue=true",
             "--allow-overwrite=true",
             "--auto-file-renaming=false",
             "--console-log-level=error",
