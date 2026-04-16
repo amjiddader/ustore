@@ -6,7 +6,7 @@
     "maintainer": "amjiddader",
     "url": "https://github.com/amjiddader/ustore",
     "license": "MIT",
-    "last_updated": "2026-04-15",
+    "last_updated": "2026-04-16",
     "total_packages": 9
   },
   "categories": [
@@ -86,7 +86,7 @@
       "popularity": 5,
       "variants": [
         {
-          "version": "147.0.7727.55-1",
+          "version": "147.0.7727.101-1",
           "arch": "amd64",
           "type": "deb",
           "url": "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb",
