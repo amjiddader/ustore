@@ -6,7 +6,7 @@
     "maintainer": "amjiddader",
     "url": "https://github.com/amjiddader/ustore",
     "license": "MIT",
-    "last_updated": "2026-04-20",
+    "last_updated": "2026-04-21",
     "total_packages": 9
   },
   "categories": [
@@ -182,7 +182,7 @@
       "popularity": 5,
       "variants": [
         {
-          "version": "0.0.133",
+          "version": "0.0.134",
           "arch": "amd64",
           "type": "deb",
           "url": "https://discord.com/api/download?platform=linux&format=deb",
