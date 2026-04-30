@@ -6,7 +6,7 @@
     "maintainer": "amjiddader",
     "url": "https://github.com/amjiddader/ustore",
     "license": "MIT",
-    "last_updated": "2026-04-29",
+    "last_updated": "2026-04-30",
     "total_packages": 9
   },
   "categories": [
@@ -277,7 +277,7 @@
       "popularity": 5,
       "variants": [
         {
-          "version": "1.117.0-1776814346",
+          "version": "1.118.1-1777474985",
           "arch": "amd64",
           "type": "deb",
           "url": "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64",
